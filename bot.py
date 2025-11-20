@@ -1,16 +1,14 @@
-import os
-import asyncio
 from aiogram import Bot, Dispatcher, types
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
-from aiogram.filters import Command
+from aiogram.utils import executor
 
-# --- Токен бота ---
+# --- ВАЖНО: вставьте сюда свой токен ---
 TOKEN = "8550479450:AAEsRNc8hu6NYKEsMc-hnUo4XxUkdYOJuHE"
 
 bot = Bot(token=TOKEN)
-dp = Dispatcher()
+dp = Dispatcher(bot)
 
-# --- Вопросы и ответы ---
+# --- FAQ ---
 FAQ = {
     "Как связаться с деканатом?":
         "На сайте в разделе «Актуально» имеется телефонный справочник с контактами деканатов:\nhttp://www.vsau.ru/телефонный-справочник/",
@@ -133,18 +131,23 @@ FAQ = {
         "Документы об образовании принятых на обучение хранятся в отделе по работе со студенческими делами университета по адресу г. Воронеж, ул. Дарвина, д. 3. Получить документ об образовании можно только лично или по нотариальной доверенности. При себе необходимо иметь паспорт."
 }
 
-# --- Кнопки ---
+# --- КНОПКИ ---
+# Кнопка "Далее"
+start_kb = ReplyKeyboardMarkup(
+    keyboard=[[KeyboardButton(text="Далее")]],
+    resize_keyboard=True
+)
+
+# Функция для клавиатуры FAQ
 def get_faq_keyboard():
-    kb = ReplyKeyboardMarkup(resize_keyboard=True)
-    for question in FAQ.keys():
-        kb.add(KeyboardButton(question))
+    kb = ReplyKeyboardMarkup(
+        keyboard=[[KeyboardButton(text=question)] for question in FAQ.keys()],
+        resize_keyboard=True
+    )
     return kb
 
-start_kb = ReplyKeyboardMarkup(resize_keyboard=True)
-start_kb.add(KeyboardButton("Далее"))
-
-# --- Хендлеры ---
-@dp.message(Command(commands=["start"]))
+# --- ХЕНДЛЕРЫ ---
+@dp.message_handler(commands=['start'])
 async def start(message: types.Message):
     await message.answer(
         "Здравствуйте! 👋\n\n"
@@ -153,21 +156,15 @@ async def start(message: types.Message):
         reply_markup=start_kb
     )
 
-@dp.message(lambda m: m.text == "Далее")
+@dp.message_handler(lambda m: m.text == "Далее")
 async def show_faq(message: types.Message):
     await message.answer("Вот список часто задаваемых вопросов:", reply_markup=get_faq_keyboard())
 
-@dp.message(lambda m: m.text in FAQ)
+@dp.message_handler(lambda m: m.text in FAQ)
 async def answer_faq(message: types.Message):
-    await message.answer(FAQ[message.text])
+    answer = FAQ[message.text]
+    await message.answer(answer)
 
-# --- Запуск бота ---
-async def main():
-    try:
-        print("Бот запущен...")
-        await dp.start_polling(bot)
-    finally:
-        await bot.session.close()
-
+# --- ЗАПУСК ---
 if __name__ == "__main__":
-    asyncio.run(main())
+    executor.start_polling(dp, skip_updates=True)
