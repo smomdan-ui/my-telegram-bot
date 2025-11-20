@@ -6,7 +6,7 @@ from aiogram.utils import executor
 # --- Токен бота ---
 TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 if not TOKEN:
-    raise ValueError("Переменная окружения TELEGRAM_BOT_TOKEN не установлена!"
+    raise ValueError("Переменная окружения TELEGRAM_BOT_TOKEN не установлена!")
 
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
