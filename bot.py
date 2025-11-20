@@ -9,7 +9,7 @@ if not TOKEN:
     raise ValueError("Переменная окружения TELEGRAM_BOT_TOKEN не установлена!")
 
 bot = Bot(token=TOKEN)
-dp = Dispatcher()
+dp = Dispatcher(bot)
 
 # --- Вопросы и ответы ---
 FAQ = {
