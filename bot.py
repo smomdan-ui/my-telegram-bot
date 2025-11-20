@@ -1,14 +1,14 @@
 from aiogram import Bot, Dispatcher, types
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
-from aiogram.utils import executor
+import asyncio
 
 # --- ВАЖНО: вставьте сюда свой токен ---
-TOKEN = "8550479450:AAEsRNc8hu6NYKEsMc-hnUo4XxUkdYOJuHE"
+TOKEN = "ВАШ_ТОКЕН_БОТА"
 
 bot = Bot(token=TOKEN)
 dp = Dispatcher(bot)
 
-# --- FAQ ---
+# --- FAQ (пример одного вопроса) ---
 FAQ = {
     "Как связаться с деканатом?":
         "На сайте в разделе «Актуально» имеется телефонный справочник с контактами деканатов:\nhttp://www.vsau.ru/телефонный-справочник/",
@@ -131,14 +131,12 @@ FAQ = {
         "Документы об образовании принятых на обучение хранятся в отделе по работе со студенческими делами университета по адресу г. Воронеж, ул. Дарвина, д. 3. Получить документ об образовании можно только лично или по нотариальной доверенности. При себе необходимо иметь паспорт."
 }
 
-# --- КНОПКИ ---
-# Кнопка "Далее"
+# --- Кнопки ---
 start_kb = ReplyKeyboardMarkup(
     keyboard=[[KeyboardButton(text="Далее")]],
     resize_keyboard=True
 )
 
-# Функция для клавиатуры FAQ
 def get_faq_keyboard():
     kb = ReplyKeyboardMarkup(
         keyboard=[[KeyboardButton(text=question)] for question in FAQ.keys()],
@@ -146,13 +144,11 @@ def get_faq_keyboard():
     )
     return kb
 
-# --- ХЕНДЛЕРЫ ---
+# --- Хэндлеры ---
 @dp.message_handler(commands=['start'])
 async def start(message: types.Message):
     await message.answer(
-        "Здравствуйте! 👋\n\n"
-        "Я цифровой тьютор ВГАУ. С удовольствием помогу вам ответить на интересующие вас вопросы.\n\n"
-        "Нажмите кнопку «Далее», которая находится в меню справа от строки ввода сообщения, для перехода к списку вопросов.",
+        "Здравствуйте! 👋\nНажмите кнопку «Далее», чтобы перейти к вопросам.",
         reply_markup=start_kb
     )
 
@@ -165,6 +161,6 @@ async def answer_faq(message: types.Message):
     answer = FAQ[message.text]
     await message.answer(answer)
 
-# --- ЗАПУСК ---
+# --- Запуск ---
 if __name__ == "__main__":
-    executor.start_polling(dp, skip_updates=True)
+    asyncio.run(dp.start_polling())
