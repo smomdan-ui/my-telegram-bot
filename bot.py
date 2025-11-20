@@ -5,9 +5,7 @@ from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 from aiogram.filters import Command
 
 # --- Токен бота ---
-TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
-if not TOKEN:
-    raise ValueError("Переменная окружения TELEGRAM_BOT_TOKEN не установлена!")
+TOKEN = "8550479450:AAEsRNc8hu6NYKEsMc-hnUo4XxUkdYOJuHE"
 
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
