@@ -1,8 +1,8 @@
 import os
 import asyncio
 from aiogram import Bot, Dispatcher, types
-from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
-from aiogram.filters import Command
+from aiogram.utils import executor
+from aiogram.dispatcher.filters import Command
 
 # --- Токен бота ---
 BOT_TOKEN = "8550479450:AAEiOO_VFos7EbFxzoZSoSmgKToIPa8wBzk"
